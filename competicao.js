@@ -1,12 +1,12 @@
 const ask = require('readline-sync')
 
-function insertProducts() {
+function insertProduct() {
   console.clear();
   let id = products.length + 1;
   let name = ask.question('Insert product name: ');
   let sellPrice = Number(ask.question('Insert selling price: '));
   let manufacturingPrice = Number(ask.question('Insert manufacturing: '));
-  let stock = Number('Insert quantity in stock: ');
+  let stock = Number(ask.question('Insert quantity in stock: '));
   console.clear();
   products.push([id, name, sellPrice, manufacturingPrice, stock]);
 
@@ -49,5 +49,47 @@ function showProducts() {
   }
   ask.question('Press ENTER to continue...');
 }
+
 const products = []
-cadastrarProduto()
+
+while (true) {
+  console.clear()
+  console.log(`
+  1 - Register product
+  2- Search product by ID
+  3- Search product by name
+  4- Show all products
+  0- Exit
+  
+  `)
+  let option = Number(ask.question(`Choose an option: `))
+
+  switch (option) {
+    case 1:
+      insertProduct()
+      break
+    case 2:
+      console.clear()
+      let id = Number(ask.question('Insert ID: '))
+      console.log(searchById(id))
+      ask.question('Press ENTER to continue...');
+      break
+    case 3:
+      console.clear()
+      let name = ask.question('Insert name: ')
+      console.log(searchByName(name))
+      ask.question('Press ENTER to continue...');
+      break
+    case 4:
+      showProducts()
+      break
+    case 0:
+      console.clear()
+      process.exit(0)
+      break
+    default:
+      console.clear()
+      console.log('Invalid option!')
+      ask.question('Press ENTER to continue...');
+  }
+}
