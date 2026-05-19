@@ -1,5 +1,4 @@
 
-
 const filme = {
     nomeDirector: 'Louis Leterrier',
     nomeFilme: 'Velozes e furiosos 10',
@@ -12,3 +11,4 @@ console.log(filme.nomeFilme)
 console.log(filme['anoDeLancamento'])
 console.log(filme['elenco'])
 console.log(filme.propriedade)
+ 
