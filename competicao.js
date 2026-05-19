@@ -84,7 +84,6 @@ while (true) {
       showProducts()
       break
     case 0:
-      console.clear()
       process.exit(0)
       break
     default:
