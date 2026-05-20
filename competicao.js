@@ -1,0 +1,1 @@
+console.log(adione 3 objtos ok? tchau.)
