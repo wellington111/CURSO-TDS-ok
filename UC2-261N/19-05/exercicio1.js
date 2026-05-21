@@ -21,7 +21,7 @@ filme.personagens = [
     'O carinha mais esperado Leo da UC2'
 ]
 
-for (let i; i < filme.elenco.length; i++) {
+for (let i = 0; i < filme.elenco.length; i++) {
     console.log(`${filme.elenco[i]} - ${filme.personagens[i]}`)
 }
 filme.elenco = 'Xuxa'
