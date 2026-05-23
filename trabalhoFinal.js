@@ -237,4 +237,4 @@ function combatMenu() {
 }
 function startCombat(character, enemy) {
 
-}
+}   
