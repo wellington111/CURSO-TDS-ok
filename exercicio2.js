@@ -6,7 +6,9 @@ function createAccount() {
         username: ask.question('Insert username: '),
         passoword: Number(ask.question('Insert passorword: ', { hideEchoBreak: true, mask: '*' }))
     }
+    
 }
+
 function login() {
     console.clear()
     let username = ask.question('Inserte username: ')
