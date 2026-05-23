@@ -1,8 +1,129 @@
-const ask = require('readline-sync')
+const ask = require("readline-sync")
+
+// =========================================
+// ATTACK FUNCTIONS
+// =========================================
+
+function warriorAttack() {
+
+    console.log("\n⚔️ The Warrior attacks fiercely!")
+
+    let damage = Math.floor(Math.random() * 7) + 10
+
+    return damage
+}
+
+function berserkerAttack() {
+
+    console.log("\n🔥 The Berserker attacks with rage!")
+
+    let damage = Math.floor(Math.random() * 9) + 15
+
+    return damage
+}
+
+function guardianAttack() {
+
+    console.log("\n🛡️ The Guardian strikes with his hammer!")
+
+    let damage = Math.floor(Math.random() * 8) + 11
+
+    return damage
+}
+
+// =========================================
+// CREATE CHARACTER
+// =========================================
+
+function createCharacter() {
+
+    let option
+    let character = null
+
+    while (character === null) {
+
+        console.clear()
+
+        console.log
+            (`             +-----------------------------+
+             |     SEJA BEM VINDO(A)       |
+             +-----------------------------+`)
+        let name = ask.question(" Insert your name: ")
+        console.log(`
+╔════════════════════════════════════════════════════════════════════════════════════╗
+║                            ⚒️ CHOOSE YOUR CLASS ⚒️                                   ║
+╚════════════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────┐
+│ ⚔️ [1] WARRIOR            │  │ 🔥 [2] BERSERKER         │  │ 🛡️ [3] GUARDIAN           │
+├──────────────────────────┤  ├──────────────────────────┤  ├──────────────────────────┤
+│ Strong balanced fighter  │  │ Brutal offensive fighter │  │ Powerful defensive tank  │
+│                          │  │                          │  │                          │
+│ ❤️ Health : 120           │  │ ❤️ Health : 100           │  │ ❤️ Health : 140           │
+│ 🛡️ Defense: 8             │  │ 🛡️ Defense: 5             │  │ 🛡️ Defense: 12            │
+│ 🧪 Potions: 3            │  │ 🧪 Potions: 2            │  │ 🧪 Potions: 4            │
+│ ⚒️ Weapon : Battle Axe    │  │ 🪓 Weapon : Dual Axes    │  │ 🔨 Weapon : War Hammr    │
+└──────────────────────────┘  └──────────────────────────┘  └──────────────────────────┘
+`)
+        option = ask.question(" Choose your class: ")
+
+        switch (option) {
+
+            case 1:
+
+                character = {
+                    name: name,
+                    className: "Warrior",
+                    health: 120,
+                    defense: 8,
+                    potions: 3,
+                    attack: warriorAttack,
+
+                }
+
+                break
+
+            case 2:
+
+                character = {
+                    name: name,
+                    className: "Berserker",
+                    health: 100,
+                    defense: 5,
+                    potions: 2,
+                    attack: berserkerAttack,
+
+                }
+
+                break
+
+            case 3:
+
+                character = {
+                    name: name,
+                    className: "Guardian",
+                    health: 140,
+                    defense: 12,
+                    potions: 4,
+                    attack: guardianAttack,
+
+                }
+
+                break
+
+            default:
+
+                console.log("\n Invalid option!")
+        }
+    }
+
+    return character
+}
 
 // =========================================
 // ENEMIES
 // =========================================
+
 let enemies = [
 
     {
@@ -38,203 +159,266 @@ let enemies = [
         health: 75,
         minDamage: 9,
         maxDamage: 16
-    },
-
-    {
-        name: "Stone Guardian",
-        health: 110,
-        minDamage: 12,
-        maxDamage: 20
-    },
-
-    {
-        name: "Moria Archer",
-        health: 50,
-        minDamage: 7,
-        maxDamage: 14
-    },
-
-    {
-        name: "Ancient Warg",
-        health: 80,
-        minDamage: 9,
-        maxDamage: 17
     }
 
 ]
 
 // =========================================
-// CREATE CHARACTER
+// GENERATE RANDOM ENEMY
 // =========================================
 
-function createCharacter() {
+function generateEnemy(enemies) {
 
-    console.clear()
+    let randomIndex = Math.floor(Math.random() * enemies.length)
 
-    let option
-    let character = null
+    return { ...enemies[randomIndex] }
+}
 
-    while (character === null) {
+// =========================================
+// ATTACK
+// =========================================
+
+function attack(character, enemy) {
+
+    let damage = character.attack()
+
+    enemy.health -= damage
+
+    if (enemy.health < 0) {
+
+        enemy.health = 0
+    }
+
+    console.log(`
+╔════════════════════════════════════╗
+║            ⚔️ ATTACK ⚔️              ║
+╚════════════════════════════════════╝
+
+💥 ${character.name} dealt ${damage} damage!
+❤️ ${enemy.name} health: ${enemy.health}
+`)
+}
+
+// =========================================
+// DEFEND
+// =========================================
+
+function defend(character) {
+
+    character.defending = true
+
+    console.log(`
+╔════════════════════════════════════╗
+║            🛡️ DEFEND 🛡️             ║
+╚════════════════════════════════════╝
+
+🛡️ ${character.name} is defending!
+`)
+}
+
+// =========================================
+// USE POTION
+// =========================================
+
+function usePotion(character) {
+
+    if (character.potions <= 0) {
+
+        console.log("\n no potions left!")
+
+        return
+    }
+
+    character.health += 30
+
+    character.potions--
+
+    console.log(`
+╔════════════════════════════════════╗
+║            🧪 POTION 🧪             ║
+╚════════════════════════════════════╝
+
+❤️ +30 Health recovered!
+🧪 Remaining potions: ${character.potions}
+❤️ Current health: ${character.health}
+`)
+}
+
+// =========================================
+// COMBAT MENU
+// =========================================
+
+function combatMenu() {
+
+    console.log(`
+┌────────────────────────────────────┐
+│            ⚔️ ACTIONS ⚔️             │
+├────────────────────────────────────┤
+│ [1] Attack                         │
+│ [2] Defend                         │
+│ [3] Use Potion                     │
+└────────────────────────────────────┘
+`)
+
+    return ask.questionInt(" Choose an action: ")
+}
+
+// =========================================
+// START COMBAT
+// =========================================
+
+function startCombat(character, enemy) {
+
+    while (character.health > 0 && enemy.health > 0) {
 
         console.clear()
 
         console.log(`
+╔════════════════════════════════════════════════════════════════════════════════════╗
+║                                  ⚔️ BATTLE ⚔️                                        ║
+╚════════════════════════════════════════════════════════════════════════════════════╝
 
-┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐
-│ ⚔️ [1] WARRIOR      │  │ 🔥 [2] BERSERKER   │  │ 🛡️ [3] GUARDIAN    │
-├────────────────────┤  ├────────────────────┤  ├────────────────────┤
-│ Strong fighter     │  │ Brutal attacker    │  │ Heavy defender     │
-│                    │  │                    │  │                    │
-│ ❤️ Health : 120    │  │ ❤️ Health : 100    │  │ ❤️ Health : 140    │
-│ 🛡️ Defense: 8      │  │ 🛡️ Defense: 5      │  │ 🛡️ Defense: 12     │
-│ 🧪 Potions: 3      │  │ 🧪 Potions: 2      │  │ 🧪 Potions: 4      │
-│ ⚒️ Battle Axe      │  │ 🪓 Dual Axes       │  │ 🔨 War Hammer      │
-└────────────────────┘  └────────────────────┘  └────────────────────┘
-
+┌──────────────────────────────────┐      ┌──────────────────────────────────┐
+│ 👤 PLAYER                        │      │ 👹 ENEMY                         │
+├──────────────────────────────────┤      ├──────────────────────────────────┤
+│ Name     : ${character.name.padEnd(18)}    │      │ Name     : ${enemy.name.padEnd(18)}    │
+│ Class    : ${character.className.padEnd(18)}    │      │ Health  : ${String(enemy.health).padEnd(18)}     │
+│ Health   : ${String(character.health).padEnd(18)}    │      │ Damage  : ${enemy.minDamage}-${enemy.maxDamage}                  │
+│ Defense  : ${String(character.defense).padEnd(18)}    │      │ Status  : Aggressive             │
+│ Potions  : ${String(character.potions).padEnd(18)}    │      │ Area    : Khazad-dûm             │
+└──────────────────────────────────┘      └──────────────────────────────────┘
 `)
 
-        let name = ask.question("\nEnter your player name: ")
-
-        console.log("\nChoose your class:")
-        console.log("[1] Warrior")
-        console.log("[2] Berserker")
-        console.log("[3] Guardian")
-
-        option = ask.questionInt("\nOption: ")
+        let option = combatMenu()
 
         switch (option) {
 
             case 1:
 
-                character = {
-                    name: name,
-                    className: "Warrior",
-                    health: 120,
-                    defense: 8,
-                    potions: 3,
-                    attack: warriorAttack
-                }
+                attack(character, enemy)
 
                 break
 
             case 2:
 
-                character = {
-                    name: name,
-                    className: "Berserker",
-                    health: 100,
-                    defense: 5,
-                    potions: 2,
-                    attack: berserkerAttack
-                }
+                defend(character)
 
                 break
 
             case 3:
 
-                character = {
-                    name: name,
-                    className: "Guardian",
-                    health: 140,
-                    defense: 12,
-                    potions: 4,
-                    attack: guardianAttack
-                }
+                usePotion(character)
 
                 break
 
             default:
 
-                console.log("\n❌ Invalid option! Try again.")
+                console.log("\n Invalid option!")
         }
-    }
 
-    console.log(`
+        if (enemy.health <= 0) {
 
-========================================
-⚒️ CHARACTER CREATED ⚒️
-========================================
+            console.log(`
+╔════════════════════════════════════╗
+║            🏆 VICTORY 🏆           ║
+╚════════════════════════════════════╝
 
-👤 Name   : ${character.name}
-🛡️ Class  : ${character.className}
-❤️ Health : ${character.health}
-🧪 Potions: ${character.potions}
-
+👹 ${enemy.name} was defeated!
 `)
 
-    return character
-}
+            break
+        }
 
-let test1 = createCharacter()
-console.log(test1)
+        let enemyDamage = Math.floor(
+            Math.random() * (enemy.maxDamage - enemy.minDamage + 1)
+        ) + enemy.minDamage
 
-// =========================================
-// ATTACK FUNCTION 1
-// =========================================
+        if (character.defending) {
 
-function warriorAttack() {
+            enemyDamage = Math.floor(enemyDamage / 2)
 
-    console.log("⚔️ The warrior attacks his enemy fiercely.")
+            character.defending = false
 
-    let damage = Math.floor(Math.random() * 7) + 10
+            console.log("\n🛡️ Defense reduced the damage!")
+        }
 
-    return damage
-}
-let test2 = guardianAttack()
-console.log(test2)
-function berserkerAttack() {
+        character.health -= enemyDamage
 
-    console.log("⚔️ The warrior attacks his enemy fiercely.")
+        if (character.health < 0) {
 
-    let damage = Math.floor(Math.random() * 9) + 15
+            character.health = 0
+        }
 
-    return damage
-}
-let test3 = guardianAttack()
-console.log(test3)
-function guardianAttack() {
+        console.log(`
+╔════════════════════════════════════╗
+║           👹 ENEMY TURN 👹         ║
+╚════════════════════════════════════╝
 
-    console.log("⚔️ The warrior attacks his enemy fiercely.")
+💥 ${enemy.name} dealt ${enemyDamage} damage!
+❤️ Your health: ${character.health}
+`)
 
-    let damage = Math.floor(Math.random() * 8) + 11
-
-    return damage
-}
-let test4 = guardianAttack()
-console.log(test4)
-// =========================================
-// ATTACK FUNCTION 2
-// =========================================
-
-function attack(character, enemy) {
-    let damage = character.attack()
-    enemy.health -= damage
-    if (enemy.health < 0) {
-        enemy.health = 0
+        ask.question("\n Press ENTER to continue...")
     }
+}
+
+// =========================================
+// GAME VARIABLES
+// =========================================
+
+let player = createCharacter()
+
+let defeatedEnemies = 0
+
+// =========================================
+// MAIN GAME LOOP
+// =========================================
+
+while (player.health > 0 && defeatedEnemies < 5) {
+
+    let enemy = generateEnemy(enemies)
+
+    startCombat(player, enemy)
+
+    if (player.health > 0) {
+
+        defeatedEnemies++
+
+        console.log(`
+╔════════════════════════════════════╗
+║          ⚔️ BATTLE RESULT ⚔️         ║
+╚════════════════════════════════════╝
+
+🏆 Enemies defeated: ${defeatedEnemies}/5
+`)
+
+        ask.question("\nPress ENTER to continue...")
+    }
+}
+
+// =========================================
+// END GAME
+// =========================================
+
+console.clear()
+
+if (player.health <= 0) {
 
     console.log(`
+╔════════════════════════════════════════╗
+║             💀 GAME OVER 💀           ║
+╚════════════════════════════════════════╝
 
-⚔️ ${character.name} attacked ${enemy.name}!
+Khazad-dûm was lost once again...
+`)
 
-💥 Damage dealt: ${damage}
+} else {
 
-❤️ ${enemy.name} Health: ${enemy.health}
+    console.log(`
+╔════════════════════════════════════════╗
+║              👑 VICTORY 👑            ║
+╚════════════════════════════════════════╝
 
+The dwarves reclaimed Khazad-dûm!
 `)
 }
-let test5 = attack()
-console.log(test5)
-
-function defend(character) {
-
-}
-function usePotion(character) {
-
-}
-function combatMenu() {
-
-}
-function startCombat(character, enemy) {
-
-}   
