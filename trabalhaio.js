@@ -1,57 +1,30 @@
 const ask = require("readline-sync")
 
 // =========================================
-// ATTACK FUNCTIONS
-// =========================================
-
-function warriorAttack() {
-
-    console.log("\n⚔️ The Warrior attacks fiercely!")
-
-    let damage = Math.floor(Math.random() * 7) + 10
-
-    return damage
-}
-
-function berserkerAttack() {
-
-    console.log("\n🔥 The Berserker attacks with rage!")
-
-    let damage = Math.floor(Math.random() * 9) + 15
-
-    return damage
-}
-
-function guardianAttack() {
-
-    console.log("\n🛡️ The Guardian strikes with his hammer!")
-
-    let damage = Math.floor(Math.random() * 8) + 11
-
-    return damage
-}
-
-// =========================================
 // CREATE CHARACTER
 // =========================================
 
 function createCharacter() {
-
-    let option
     let character = null
 
     while (character === null) {
 
         console.clear()
 
-        console.log
-            (`             +-----------------------------+
-             |     SEJA BEM VINDO(A)       |
-             +-----------------------------+`)
-        let name = ask.question(" Insert your name: ")
         console.log(`
 ╔════════════════════════════════════════════════════════════════════════════════════╗
-║                            ⚒️ CHOOSE YOUR CLASS ⚒️                                   ║
+║                         ⚒️ KHAZAD-DÛM RPG ⚒️                                         ║
+║                                                                                    ║
+║                  "The darkness rises beneath the mountain..."                      ║
+╚════════════════════════════════════════════════════════════════════════════════════╝
+`)
+
+        let name = ask.question(" Insert your hero name: ")
+
+        console.log(`
+
+╔════════════════════════════════════════════════════════════════════════════════════╗
+║                              ⚒️ CHOOSE YOUR CLASS ⚒️                                ║
 ╚════════════════════════════════════════════════════════════════════════════════════╝
 
 ┌──────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────┐
@@ -62,10 +35,11 @@ function createCharacter() {
 │ ❤️ Health : 120           │  │ ❤️ Health : 100           │  │ ❤️ Health : 140           │
 │ 🛡️ Defense: 8             │  │ 🛡️ Defense: 5             │  │ 🛡️ Defense: 12            │
 │ 🧪 Potions: 3            │  │ 🧪 Potions: 2            │  │ 🧪 Potions: 4            │
-│ ⚒️ Weapon : Battle Axe    │  │ 🪓 Weapon : Dual Axes    │  │ 🔨 Weapon : War Hammr    │
+│ ⚒️ Weapon : Battle Axe    │  │ 🪓 Weapon : Dual Axes    │  │ 🔨 Weapon : War Hammer   │
 └──────────────────────────┘  └──────────────────────────┘  └──────────────────────────┘
 `)
-        option = ask.question(" Choose your class: ")
+
+        let option = Number(ask.question(" Choose your class: "))
 
         switch (option) {
 
@@ -77,8 +51,20 @@ function createCharacter() {
                     health: 120,
                     defense: 8,
                     potions: 3,
-                    attack: warriorAttack,
+                    attack: function warriorAttack() {
 
+                        console.log(`
+╔════════════════════════════════════╗
+║        ⚔️ WARRIOR ATTACK ⚔️         ║
+╚════════════════════════════════════╝
+                    
+                    ⚔️ The Warrior attacks angry!
+                    `)
+
+                        let damage = Math.floor(Math.random() * 7) + 10
+
+                        return damage
+                    },
                 }
 
                 break
@@ -91,7 +77,20 @@ function createCharacter() {
                     health: 100,
                     defense: 5,
                     potions: 2,
-                    attack: berserkerAttack,
+                    attack: function berserkerAttack() {
+
+                        console.log(`
+ ╔════════════════════════════════════╗
+ ║       🔥 BERSERKER ATTACK 🔥        ║
+ ╚════════════════════════════════════╝
+                    
+                    🔥 The Berserker attacks with rage!
+                    `)
+
+                        let damage = Math.floor(Math.random() * 9) + 15
+
+                        return damage
+                    },
 
                 }
 
@@ -105,17 +104,51 @@ function createCharacter() {
                     health: 140,
                     defense: 12,
                     potions: 4,
-                    attack: guardianAttack,
+                    attack:
+                        function guardianAttack() {
 
+                            console.log(`
+                    ╔════════════════════════════════════╗
+                    ║        🛡️ GUARDIAN ATTACK 🛡️        ║
+                    ╚════════════════════════════════════╝
+                    
+                    🛡️ The Guardian strikes with his hammer!
+                    `)
+
+                            let damage = Math.floor(Math.random() * 8) + 11
+
+                            return damage
+                        },
                 }
 
                 break
 
             default:
 
-                console.log("\n Invalid option!")
+                console.log(`
+╔════════════════════════════════════╗
+║          ❌ INVALID OPTION ❌       ║
+╚════════════════════════════════════╝
+
+⚠️ Choose a valid class!
+`)
         }
     }
+
+    // HEROI CRIADO
+
+    console.log(`
+╔════════════════════════════════════╗
+║          👑 HERO CREATED 👑        ║   
+╚════════════════════════════════════╝
+
+👤  Name  : ${character.name}
+⚔️  Class : ${character.className}
+
+🔥 Your adventure begins now...
+`)
+
+    ask.question("\nPress ENTER to continue...")
 
     return character
 }
@@ -169,9 +202,26 @@ let enemies = [
 
 function generateEnemy(enemies) {
 
-    let randomIndex = Math.floor(Math.random() * enemies.length)
+    let enemyIndex = Math.floor(Math.random() * enemies.length)
 
-    return { ...enemies[randomIndex] }
+    let enemy = { ...enemies[enemyIndex] }
+
+    console.clear()
+
+    console.log(`
+╔════════════════════════════════════╗
+║          👹 ENEMY APPEARED 👹      ║
+╚════════════════════════════════════╝
+
+⚠️ A wild ${enemy.name} appeared!
+❤️ Health: ${enemy.health}
+
+Prepare for battle...
+`)
+
+    ask.question("\nPress ENTER to continue...")
+
+    return enemy
 }
 
 // =========================================
@@ -184,18 +234,13 @@ function attack(character, enemy) {
 
     enemy.health -= damage
 
-    if (enemy.health < 0) {
-
-        enemy.health = 0
-    }
-
     console.log(`
 ╔════════════════════════════════════╗
 ║            ⚔️ ATTACK ⚔️              ║
 ╚════════════════════════════════════╝
 
 💥 ${character.name} dealt ${damage} damage!
-❤️ ${enemy.name} health: ${enemy.health}
+👹 ${enemy.name} remaining health: ${enemy.health}
 `)
 }
 
@@ -209,10 +254,11 @@ function defend(character) {
 
     console.log(`
 ╔════════════════════════════════════╗
-║            🛡️ DEFEND 🛡️             ║
+║            🛡️ DEFEND 🛡️              ║
 ╚════════════════════════════════════╝
 
-🛡️ ${character.name} is defending!
+🛡️ ${character.name} raised defenses!
+⚡ Incoming damage will be reduced!
 `)
 }
 
@@ -224,18 +270,24 @@ function usePotion(character) {
 
     if (character.potions <= 0) {
 
-        console.log("\n no potions left!")
+        console.log(`
+╔════════════════════════════════════╗
+║            ❌ NO POTIONS ❌         ║
+╚════════════════════════════════════╝
+
+⚠️ You don't have any potions left!
+`)
 
         return
     }
 
-    character.health += 30
+    character.health + 30
 
     character.potions--
 
     console.log(`
 ╔════════════════════════════════════╗
-║            🧪 POTION 🧪             ║
+║            🧪 POTION 🧪            ║
 ╚════════════════════════════════════╝
 
 ❤️ +30 Health recovered!
@@ -260,7 +312,7 @@ function combatMenu() {
 └────────────────────────────────────┘
 `)
 
-    return ask.questionInt(" Choose an action: ")
+    return Number(ask.question("Choose an action: "))
 }
 
 // =========================================
@@ -274,19 +326,15 @@ function startCombat(character, enemy) {
         console.clear()
 
         console.log(`
-╔════════════════════════════════════════════════════════════════════════════════════╗
-║                                  ⚔️ BATTLE ⚔️                                        ║
-╚════════════════════════════════════════════════════════════════════════════════════╝
+⚔️ BATTLE ⚔️
 
-┌──────────────────────────────────┐      ┌──────────────────────────────────┐
-│ 👤 PLAYER                        │      │ 👹 ENEMY                         │
-├──────────────────────────────────┤      ├──────────────────────────────────┤
-│ Name     : ${character.name.padEnd(18)}    │      │ Name     : ${enemy.name.padEnd(18)}    │
-│ Class    : ${character.className.padEnd(18)}    │      │ Health  : ${String(enemy.health).padEnd(18)}     │
-│ Health   : ${String(character.health).padEnd(18)}    │      │ Damage  : ${enemy.minDamage}-${enemy.maxDamage}                  │
-│ Defense  : ${String(character.defense).padEnd(18)}    │      │ Status  : Aggressive             │
-│ Potions  : ${String(character.potions).padEnd(18)}    │      │ Area    : Khazad-dûm             │
-└──────────────────────────────────┘      └──────────────────────────────────┘
+👤 PLAYER                                         👹 ENEMY
+Name: ${character.name}                            Name: ${enemy.name}
+Class: ${character.className}                      Health: ${enemy.health}
+Health: ${character.health}                        Damage: ${enemy.minDamage} - ${enemy.maxDamage}
+Defense: ${character.defense}
+Potions: ${character.potions}
+
 `)
 
         let option = combatMenu()
@@ -294,44 +342,27 @@ function startCombat(character, enemy) {
         switch (option) {
 
             case 1:
-
                 attack(character, enemy)
-
                 break
 
             case 2:
-
                 defend(character)
-
                 break
 
             case 3:
-
                 usePotion(character)
-
                 break
 
             default:
-
-                console.log("\n Invalid option!")
+                console.log("❌ Invalid option")
         }
 
         if (enemy.health <= 0) {
-
-            console.log(`
-╔════════════════════════════════════╗
-║            🏆 VICTORY 🏆           ║
-╚════════════════════════════════════╝
-
-👹 ${enemy.name} was defeated!
-`)
-
             break
         }
 
-        let enemyDamage = Math.floor(
-            Math.random() * (enemy.maxDamage - enemy.minDamage + 1)
-        ) + enemy.minDamage
+        let enemyDamage =
+            Math.floor(Math.random() * (enemy.maxDamage - enemy.minDamage + 1)) + enemy.minDamage
 
         if (character.defending) {
 
@@ -339,26 +370,23 @@ function startCombat(character, enemy) {
 
             character.defending = false
 
-            console.log("\n🛡️ Defense reduced the damage!")
+            console.log("🛡️ Damage reduced!")
         }
 
         character.health -= enemyDamage
 
         if (character.health < 0) {
-
             character.health = 0
         }
 
         console.log(`
-╔════════════════════════════════════╗
-║           👹 ENEMY TURN 👹         ║
-╚════════════════════════════════════╝
+👹 ENEMY TURN
 
-💥 ${enemy.name} dealt ${enemyDamage} damage!
+${enemy.name} caused ${enemyDamage} damage!
 ❤️ Your health: ${character.health}
 `)
 
-        ask.question("\n Press ENTER to continue...")
+        ask.question("Press ENTER...")
     }
 }
 
@@ -390,6 +418,7 @@ while (player.health > 0 && defeatedEnemies < 5) {
 ╚════════════════════════════════════╝
 
 🏆 Enemies defeated: ${defeatedEnemies}/5
+🔥 Continue your legendary journey...
 `)
 
         ask.question("\nPress ENTER to continue...")
@@ -406,10 +435,13 @@ if (player.health <= 0) {
 
     console.log(`
 ╔════════════════════════════════════════╗
-║             💀 GAME OVER 💀           ║
+║             💀 GAME OVER 💀            ║
 ╚════════════════════════════════════════╝
 
+⚰️ ${player.name} has fallen in battle...
+
 Khazad-dûm was lost once again...
+Darkness consumed the mountain...
 `)
 
 } else {
@@ -419,6 +451,8 @@ Khazad-dûm was lost once again...
 ║              👑 VICTORY 👑            ║
 ╚════════════════════════════════════════╝
 
-The dwarves reclaimed Khazad-dûm!
+⚔️ ${player.name} defeated all enemies!
+🏔️ The dwarves reclaimed Khazad-dûm!
+🔥 Songs will be sung about this victory forever!
 `)
 }
